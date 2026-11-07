@@ -1,5 +1,14 @@
 ### This repository contains an NN model developed for the work presented in "Grid-based exoplanet atmospheric mass-loss predictions via neural networks" [https://doi.org/10.1051/0004-6361/202452379]. 
 
+### Prerequisites
+
+Before running the model, install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+
 #### plug-in-ver: This version is tailored for integration within a user-defined modelling framework. 
 
 ```python
