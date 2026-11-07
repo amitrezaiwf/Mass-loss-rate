@@ -1,9 +1,16 @@
+import warnings
+warnings.filterwarnings("ignore", category = UserWarning, module = "sklearn")
+#-
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 import argparse
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import joblib
 from tensorflow.keras.models import load_model
+#-
 
 class Mass_Loss_Model:
     def __init__(self, mss, d0, euv0, rpl, mpl):
@@ -19,7 +26,9 @@ class Mass_Loss_Model:
         """
         Calculate the corresponding temperature in the grid [K].
         """
-        mstd = np.loadtxt('teq-sma.txt')
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        teq_file_path = os.path.join(base_dir, 'teq-sma.txt')
+        mstd = np.loadtxt(teq_file_path)
         tg = np.linspace(3000, 300, 28)
         d1 = np.zeros(len(tg))
         mstd0 = mstd[:, 0]
@@ -68,6 +77,10 @@ class Mass_Loss_Model:
         lambda_k = self.Lambda(self.Rpl, self.Mpl, self.Teq) * k
         return lambda_k, k
 
+    # Persistent Class-Level Object Storage Caches
+    _cached_model = None
+    _cached_scaler = None
+
     def DNN_pred(self):
         """
         Use a deep neural network model to predict the mass loss rate.
@@ -79,11 +92,19 @@ class Mass_Loss_Model:
         input_data[:, 3] = np.log10(self.EUV)
         input_data[:, 4] = self.Rpl
         input_data[:, 5] = self.lambda_K
-
-        DNN = load_model('3l_model_lambda_k.h5')
-        output_pred = DNN.predict(input_data)
-        scaler = joblib.load('scaler_y_3l_model_lambda_k.save')
-        output_trans1 = scaler.inverse_transform(output_pred.reshape(-1, 1))
+        
+        # Build filepaths dynamically relative to script location
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        model_path = os.path.join(base_dir, '3l_model_lambda_k.h5')
+        scaler_path = os.path.join(base_dir, 'scaler_y_3l_model_lambda_k.save')
+        
+        if Mass_Loss_Model._cached_model is None:
+           Mass_Loss_Model._cached_model = load_model(model_path, compile = False)
+        if Mass_Loss_Model._cached_scaler is None:
+            Mass_Loss_Model._cached_scaler = joblib.load(scaler_path)
+        
+        output_pred = Mass_Loss_Model._cached_model.predict(input_data, verbose = 0)
+        output_trans1 = Mass_Loss_Model._cached_scaler.inverse_transform(output_pred.reshape(-1, 1))
         output_trans2 = 10**output_trans1
 
         return output_trans2.flatten()
@@ -97,6 +118,7 @@ class Mass_Loss_Model:
         return mass_loss_rate
         
 #-
+
 '''
 planet_name = 'HD209458b'
 Mss = 1.148 #stellar mass [Msun]
@@ -113,7 +135,6 @@ print('Planet Name:HD209458b')
 print(mass_loss_rate) 
 '''
 #-
-
 '''
 planet_name = 'GJ436b'
 Mss = 0.452 #stellar mass [Msun]
@@ -204,6 +225,7 @@ print('Planet Name:55-Cnc-e')
 print(mass_loss_rate)
 '''
 #-
+'''
 planet_name = 'HD97658b'
 Mss = 0.85 #stellar mass [Msun]
 d0 = 0.08 #orbital separation [AU]
@@ -220,6 +242,7 @@ formatted_mass_loss_rate = [f"{rate:.3f}" for rate in mass_loss_rate]
 print('Planet Name:HD97658b')
 print(mass_loss_rate) 
 print('The mass-loss rate is:', formatted_mass_loss_rate)
+'''
 
 #expected outputs
 
@@ -231,3 +254,25 @@ print('The mass-loss rate is:', formatted_mass_loss_rate)
 #The escape rate of HAT-P-11b is 1.01e+10 g/s
 #The escape rate of 55-Cnc-e is 1.45e+10 g/s
 #The escape rate of HD97658b is 2.21e+09 g/s
+#-
+
+if __name__ == '__main__':
+    print("Executing standalone pipeline diagnostics...\n")
+
+    # Baseline planet for calculation verification
+    planet_name = 'HD97658b'
+    Mss = 0.85
+    d0 = 0.08
+    T_i = 757.
+    EUV0 = 955.
+    Rpl0 = 2.4
+    Mpl = 8.88
+
+    model = Mass_Loss_Model(mss = Mss, d0 = d0, euv0 = EUV0, rpl = Rpl0, mpl = Mpl)
+    mass_loss_rate = model.calculate_mass_loss_rate()
+    formatted_mass_loss_rate = [f"{rate:.3e}" for rate in mass_loss_rate]
+
+    print(f'Planet Name: {planet_name}')
+    print(f'The predicted mass-loss rate is: {formatted_mass_loss_rate} g/s')
+    print('Expected mass-loss rate is: ~ 2.21e+09 g/s')
+
