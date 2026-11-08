@@ -71,8 +71,8 @@ class TestMassLossInference(unittest.TestCase):
             pred_scalar = prediction[0] if hasattr(prediction, '__len__') else prediction
 
             print(f"Target System: {name}")
-            print(f"  → NN Predicted Mass-loss rate : {pred_scalar:.4e} g/s")
-            print(f"  → Expected Mass-loss rate : ~ {params['expected']} g/s")
+            print(f"  -> NN Predicted Mass-loss rate : {pred_scalar:.4e} g/s")
+            print(f"  -> Expected Mass-loss rate : ~ {params['expected']} g/s")
             print("-" * 68)
 
         print("\n" + "="*68)
