@@ -8,10 +8,11 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         python-version: ["3.10", "3.11"]
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
     - name: Checkout repository
@@ -20,7 +21,7 @@ jobs:
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.matrix.python-version }}
+        python-version: ${{ matrix.python-version }}
         cache: 'pip'
 
     - name: Install dependencies
