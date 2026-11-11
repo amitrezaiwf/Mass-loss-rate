@@ -14,7 +14,23 @@ pip install -r requirements.txt
 * **Plug-in Version (`plug_in_ver/`)**: Import `Mass_Loss_Model` directly into your own modeling scripts to calculate escape rates based on planetary parameters.
 * **Command Line Version (`command-line-ver/`)**: Run batch predictions from terminal using `test.py` with custom data and model weight files.
 
-## Testing & Citation
+## Testing
 * **Unit Testing**: Run `python tests/test_model.py` from the root directory to verify your local setup.
-* **Citation**: Reference the work via the corresponding *Astronomy & Astrophysics* publication (Volume 688, A14, 2024).
+
+---
+
+## Citation
+
+```bibtex
+@article{reza2025grid,
+  title={Grid-based exoplanet atmospheric mass-loss predictions via neural networks},
+  author={Reza, Amit and Kubyshkina, Daria and Fossati, Luca and Helling, Christiane},
+  journal={Astronomy \& Astrophysics},
+  volume={694},
+  pages={A88},
+  year={2025},
+  publisher={EDP Sciences}
+}
+
+
 
