@@ -1,10 +1,12 @@
 import warnings
+
 warnings.filterwarnings("ignore", category = UserWarning, module = "sklearn")
 
 #-
-import unittest
 import os
 import sys
+import unittest
+
 import numpy as np
 
 # Integrate system paths to ensure import clarity across any workspace
@@ -13,6 +15,7 @@ project_root = os.path.abspath(os.path.join(current_dir, ".."))
 sys.path.insert(0, project_root)
 
 from plug_in_ver.DNN_main import Mass_Loss_Model
+
 
 #-
 class TestMassLossInference(unittest.TestCase):

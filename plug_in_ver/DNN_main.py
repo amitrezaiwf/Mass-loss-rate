@@ -1,15 +1,15 @@
 import warnings
+
 warnings.filterwarnings("ignore", category = UserWarning, module = "sklearn")
 #-
 import os
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-import argparse
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
 import joblib
+import numpy as np
 from tensorflow.keras.models import load_model
+
 #-
 
 class Mass_Loss_Model:
@@ -65,7 +65,7 @@ class Mass_Loss_Model:
         d_sp = (AU/Re) * (self.d0/self.Rpl)
         alpha = (Me/Msun) * (self.Mpl/self.Mss)
         R_0 = d_sp * (alpha/3)**(1/3)
-        num = ((R_0 - 1)**2) * ((2 * R_0 + 1))
+        num = ((R_0 - 1)**2) * (2 * R_0 + 1)
         denom = 2 * R_0**3
         return num / denom
 
