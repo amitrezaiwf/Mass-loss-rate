@@ -1,8 +1,8 @@
-# Grid-Based Exoplanet Atmospheric Mass-Loss Predictions via Neural Networks
+## Grid-Based Exoplanet Atmospheric Mass-Loss Predictions via Neural Networks
 
 Official repository for the *Astronomy & Astrophysics* (2024) paper, featuring a neural network implementation for predicting exoplanet atmospheric escape rates.
 
-## Overview & Installation
+### Overview & Installation
 Clone the repository and install the required dependencies:
 ```bash
 git clone https://github.com
@@ -10,16 +10,16 @@ cd Mass-loss-rate
 pip install -r requirements.txt
 ```
 
-## Usage Styles
+### Usage Styles
 * **Plug-in Version (`plug_in_ver/`)**: Import `Mass_Loss_Model` directly into your own modeling scripts to calculate escape rates based on planetary parameters.
 * **Command Line Version (`command-line-ver/`)**: Run batch predictions from terminal using `test.py` with custom data and model weight files.
 
-## Testing
+### Testing
 * **Unit Testing**: Run `python tests/test_model.py` from the root directory to verify your local setup.
 
 ---
 
-## Citation
+### Citation
 
 ```bibtex
 @article{reza2025grid,
@@ -29,7 +29,8 @@ pip install -r requirements.txt
   volume={694},
   pages={A88},
   year={2025},
-  publisher={EDP Sciences}
+  publisher={EDP Sciences},
+  doi = {https://doi.org/10.1051/0004-6361/202452379}
 }
 
 
